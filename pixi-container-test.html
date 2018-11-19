@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script src="pixi.js"></script>
+
+    <title>Pixi.js test</title>
+</head>
+
+<body>
+
+
+<script type="text/javascript">
+
+    // Init part
+    let type = "WebGL"
+    if (!PIXI.utils.isWebGLSupported()) {
+        type = "canvas"
+    }
+
+    //Create a Pixi Application
+    const CANVAS_WIDTH = 512;
+    const CANVAS_HEIGHT = 512;
+    let app = new PIXI.Application({
+        width: CANVAS_WIDTH,
+        height: CANVAS_HEIGHT
+    });
+    document.body.appendChild(app.view);
+    let stage = app.stage;
+
+
+    // MAIN 
+    let lines = new PIXI.Graphics();
+    lines.beginFill(0xFFFFFF);
+    lines.lineStyle(1, 0xFFFFFF, 1)
+        .moveTo(CANVAS_WIDTH / 2, 0)
+        .lineTo(CANVAS_WIDTH / 2, CANVAS_HEIGHT);
+    lines.lineStyle(1, 0xFFFFFF, 1)
+        .moveTo(0, CANVAS_HEIGHT / 2)
+        .lineTo(CANVAS_WIDTH, CANVAS_HEIGHT / 2);
+    lines.endFill()
+    app.stage.addChild(lines)
+
+    let greenContainer = new PIXI.Container();
+    greenContainer.position.x = 256;
+    greenContainer.position.y = 256;
+    greenContainer.interactive = true;
+
+    let border = new PIXI.Graphics();
+    border.beginFill(0x00FF00);
+    border.drawRect(20, 20, 200, 100);
+    border.endFill();
+
+    greenContainer.addChild(border);
+    
+    let inSprite = new PIXI.Sprite.fromImage('img/cat.png');
+    inSprite.position.x = 0;
+    inSprite.position.y = 0;
+    inSprite.tint = 0x00FF00;
+    inSprite.setParent(greenContainer);    // The same is:
+    // greenContainer.addChild(inSprite);
+
+    stage.addChild(greenContainer);
+
+    // Size img 64x64
+    let sprite = new PIXI.Sprite.fromImage('img/cat.png');
+    sprite.pivot.x = 32;
+    sprite.pivot.y = 32;
+    sprite.position.x = 256;
+    sprite.position.y = 256;
+    stage.addChild(sprite);
+
+
+
+</script>
+
+</body>
+
+</html>

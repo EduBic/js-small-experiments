@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script src="js/pixi.js"></script>
+
+    <title>Pixi.js test</title>
+</head>
+
+<body>
+    <p id="help"></p>
+
+    <script type="text/javascript">
+        //Create a Pixi Application
+        const CANVAS_WIDTH = 512;
+        const CANVAS_HEIGHT = 512;
+
+        let app = new PIXI.Application(CANVAS_WIDTH, CANVAS_HEIGHT);
+        document.body.appendChild(app.view);
+
+        // Scale mode for all textures, will retain pixelation
+        // PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+
+        let square = new PIXI.Graphics();
+        square.beginFill(0xFFFF00);
+        square.drawRect(60, 60, 100, 100);
+        square.endFill();
+        square.position.set(100, 100);
+        console.log(square.position);
+
+        app.stage.addChild(square);
+
+        square.interactive = true
+        square.buttonMode = true;
+        square.on('click', (e) => {
+            document.getElementById('help').innerText = "square position = (" + square.x + ', ' + square.y + ')';
+        });
+
+        // // Init part
+        // let type = "WebGL"
+        // if (!PIXI.utils.isWebGLSupported()) {
+        //     type = "canvas"
+        // }
+
+        let lines = new PIXI.Graphics();
+        lines.beginFill(0xFFFFFF);
+        lines.lineStyle(1, 0xFFFFFF, 1)
+            .moveTo(CANVAS_WIDTH / 2, 0)
+            .lineTo(CANVAS_WIDTH / 2, CANVAS_HEIGHT);
+        lines.lineStyle(1, 0xFFFFFF, 1)
+            .moveTo(0, CANVAS_HEIGHT / 2)
+            .lineTo(CANVAS_WIDTH, CANVAS_HEIGHT / 2);
+        lines.endFill()
+
+        app.stage.addChild(lines)
+    </script>
+
+</body>
+
+</html>

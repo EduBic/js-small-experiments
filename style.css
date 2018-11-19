@@ -1,0 +1,26 @@
+
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+p {
+    margin: 0;
+}
+
+#main-container {
+    display: flex;
+}
+
+.panel {
+    padding: 1.5%;
+    border: 1px dashed black;
+}
+
+#side-panel {
+    background-color: lightcoral;
+}
+
+#content-panel {
+    background-color: thistle;
+}

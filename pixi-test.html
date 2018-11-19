@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script src="js/pixi.js"></script>
+
+    <title>Pixi.js test</title>
+</head>
+
+<body>
+
+
+<script type="text/javascript">
+    let type = "WebGL"
+    if (!PIXI.utils.isWebGLSupported()) {
+        type = "canvas"
+    }
+
+    //Create a Pixi Application
+    let app = new PIXI.Application({
+        width: 256,
+        height: 256
+    });
+    document.body.appendChild(app.view);
+
+    let lines = new PIXI.Graphics();
+    lines.beginFill(0xFFFFFF);
+    lines.lineStyle(1, 0xFFFFFF, 1)
+        .moveTo(128, 0)
+        .lineTo(128, 256);
+    lines.lineStyle(1, 0xFFFFFF, 1)
+        .moveTo(0, 128)
+        .lineTo(256, 128);
+    lines.endFill()
+    app.stage.addChild(lines)
+
+    let elem = new PIXI.Graphics();
+    elem.beginFill(0xFFFFFF);
+    elem.drawCircle(128, 128, 10);
+    elem.endFill();
+    elem.interactive = true;
+
+    createDragAndDropFor(elem);
+    // elem.on('mousedown', onDragStart)
+    //   .on('mousemove', onDragMove)
+    //   .on('mouseup', onDragEnd)
+    //   .on('mouseupoutside', onDragEnd);
+
+    app.stage.addChild(elem);
+
+    function onDragStart(event) {
+        console.log('pos from start', event);
+        // store a reference to the data
+        // the reason for this is because of multitouch
+        // we want to track the movement of this particular touch
+        this.data = event.data;
+        this.alpha = 0.5;
+        this.dragState = true;
+    }
+
+    function onDragEnd(event) {
+        console.log('onDragEnd', event);
+        this.alpha = 1;
+        this.dragState = false;
+
+        // set the interaction data to null
+        this.data = null;
+    }
+
+    function onDragMove(event) {
+        // console.log('onDragMove', event);
+        if (elem.trackedPointers) {
+            console.log('log');
+        }
+        if (this.dragState) {
+
+            let newPosition = this.data.getLocalPosition(this.parent);
+            console.log('pos from parent', newPosition);
+            this.position.x = newPosition.x - this.position.x;
+            this.position.y = newPosition.y - this.position.y;
+        }
+    }
+
+    function createDragAndDropFor(target){  
+        target.interactive = true;
+        target.on("mousedown", function(e){
+            drag = target;
+        })
+        target.on("mouseup", function(e){
+            drag = false;
+        })
+        target.on("mousemove", function(e){
+            if(drag){
+            drag.position.x += e.data.originalEvent.movementX;
+            drag.position.y += e.data.originalEvent.movementY;
+            }
+    })
+}
+
+</script>
+
+</body>
+
+</html>

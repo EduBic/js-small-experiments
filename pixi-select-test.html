@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <script src="js/pixi.js"></script>
+
+    <title>Pixi.js test</title>
+</head>
+
+<body>
+
+
+    <script type="text/javascript">
+        //Create a Pixi Application
+        const CANVAS_WIDTH = 512;
+        const CANVAS_HEIGHT = 512;
+
+        let app = new PIXI.Application(CANVAS_WIDTH, CANVAS_HEIGHT);
+        document.body.appendChild(app.view);
+
+        // Scale mode for all textures, will retain pixelation
+        // PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+
+        addCat('Green', 0x00FF00, 200, CANVAS_HEIGHT / 2);
+        addCat('Red', 0xFF0000, 300, CANVAS_HEIGHT / 2);
+        let selectedSprite = null;
+
+        function onClick(e) {
+            if (selectedSprite) {
+                console.log('selected', selectedSprite.name);
+            }
+            console.log("select", this.name);
+            selectedSprite = this;
+        }
+
+        function addCat(_name, _color, _x, _y) {
+            let sprite = new PIXI.Sprite.fromImage('img/cat.png');
+            sprite.name = _name;
+            sprite.anchor.set(0.5);
+            sprite.x = _x;
+            sprite.y = _y;
+            sprite.tint = _color;
+
+            sprite.interactive = true;
+            sprite.buttonMode = true;
+            sprite.on('click', onClick.bind(sprite));
+
+            app.stage.addChild(sprite);
+        }
+
+        // // Init part
+        // let type = "WebGL"
+        // if (!PIXI.utils.isWebGLSupported()) {
+        //     type = "canvas"
+        // }
+
+        let lines = new PIXI.Graphics();
+        lines.beginFill(0xFFFFFF);
+        lines.lineStyle(1, 0xFFFFFF, 1)
+            .moveTo(CANVAS_WIDTH / 2, 0)
+            .lineTo(CANVAS_WIDTH / 2, CANVAS_HEIGHT);
+        lines.lineStyle(1, 0xFFFFFF, 1)
+            .moveTo(0, CANVAS_HEIGHT / 2)
+            .lineTo(CANVAS_WIDTH, CANVAS_HEIGHT / 2);
+        lines.endFill()
+
+        app.stage.addChild(lines)
+    </script>
+
+</body>
+
+</html>

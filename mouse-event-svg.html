@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+
+    <div style="border: 1px solid black">
+        <svg width="300" height="100">
+            <rect id="container" width="60" height="60"></rect>
+            <rect id="container2" x="70" width="60" height="60"  fill="salmon"></rect>
+        </svg>
+    </div>
+
+    <div id="list">
+        <img id="item" src="img/cat.png" width="64" />
+    </div>
+
+    <script>
+
+        const container = document.getElementById('container');
+        const container2 = document.getElementById('container2');
+        const item = document.getElementById('item');
+
+        let drag = null
+        
+        item.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            console.log('mouse down from IMG');
+            drag = e.target;
+        });
+
+        container.addEventListener('mouseup', function (e) {
+            e.preventDefault();
+            console.log('Container 1', drag);
+            drag = null;
+        });
+
+        container2.addEventListener('mouseup', function (e) {
+            e.preventDefault();
+            console.log('Container 2', drag);
+            drag = null;
+        });
+    </script>
+
+</body>
+
+</html>
