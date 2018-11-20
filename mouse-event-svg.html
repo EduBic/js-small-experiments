@@ -5,44 +5,125 @@
     <meta charset="UTF-8">
 </head>
 
+<style>
+    #ghost {
+        pointer-events: none;
+        position: absolute;
+        opacity: 0.5;
+        filter: alpha(opacity=50);
+        width: 64px;
+        height: 64px;
+    }
+    .disable-ghost {
+        display: none;
+    }
+
+</style>
+
 <body>
 
     <div style="border: 1px solid black">
-        <svg width="300" height="100">
+        <svg id="main" width="300" height="100">
             <rect id="container" width="60" height="60"></rect>
             <rect id="container2" x="70" width="60" height="60"  fill="salmon"></rect>
         </svg>
     </div>
 
     <div id="list">
-        <img id="item" src="img/cat.png" width="64" />
+        <img id="item" src="img/cat.png" width="64" draggable="true" />
     </div>
 
+    <img id="ghost" class="disable-ghost" src="img/cat.png" width="64" draggable="false"/>
+
     <script>
+
+        const svg = document.getElementById('main');
 
         const container = document.getElementById('container');
         const container2 = document.getElementById('container2');
         const item = document.getElementById('item');
 
-        let drag = null
+        // svg.addEventListener('drop', function (e) {
+        //     console.log('drop on SVG', e);
+        //     console.log('Target: ', e.target.id);
+        //     e.preventDefault();
+        //     const data = e.dataTransfer.getData("text");
+        //     let targetElem = document.getElementById(e.target.id);
+        //     targetElem.
+        //     console.log('drop data: ', data);
+        // });
+        // svg.addEventListener('dragover', (e) => {
+        //     console.log('dragover on svg');
+        //     e.preventDefault();
+        // });        
         
+        // item.addEventListener('dragstart', (e) => {
+        //     console.log('drag started');
+        //     e.dataTransfer.setData("json", e);
+        // })
+        // item.addEventListener('drag', (e) => {
+        //     console.log('dragging');
+        // })
+
+        /* MOUSE DOWN + MOUSE UP solution */
+        // Issue: it removes the support to ghost drag element effect.
+        // You need to add your ghost element
+
+        let drag = null
+        const ghost = document.getElementById('ghost');
+        const img = document.getElementById('item');
+        
+        let offsetX = 0;
+        let offsetY = 0;
+
+        // start drag
         item.addEventListener('mousedown', function (e) {
             e.preventDefault();
-            console.log('mouse down from IMG');
+            console.log('item: mouse down from IMG', e);
             drag = e.target;
+
+            let rect = e.target.getBoundingClientRect();
+            offsetX = e.clientX - rect.left; 
+            offsetY = e.clientY - rect.top;  
+
+            ghost.style.left = (e.x - offsetX) + 'px';
+            ghost.style.top = (e.y - offsetY) + 'px';
+            ghost.classList.remove('disable-ghost');
+            
+            // enabling listener to document            
+            document.addEventListener('mousemove', dragging);
+            document.addEventListener('mouseup', endDrag);
+
+            container.addEventListener('mouseup', dropListen);
+            container2.addEventListener('mouseup', dropListen);
         });
 
-        container.addEventListener('mouseup', function (e) {
+        function dragging(e) {
             e.preventDefault();
-            console.log('Container 1', drag);
-            drag = null;
-        });
+            // console.log('dragging to', e.x, e.y);
 
-        container2.addEventListener('mouseup', function (e) {
+            ghost.style.left = (e.x - offsetX) + "px";
+            ghost.style.top = (e.y - offsetY) + "px";
+        }
+
+        function endDrag(e) {
             e.preventDefault();
-            console.log('Container 2', drag);
+            console.log('endDrag: mouse up');
+            ghost.classList.add('disable-ghost');
+
+            document.removeEventListener('mousemove', dragging);
+            document.removeEventListener('mouseup', endDrag);
+            container.removeEventListener('mouseup', dropListen);
+            container2.removeEventListener('mouseup', dropListen);
+        }
+
+        function dropListen(e) {
+            e.preventDefault();
+            console.log('Container drop:', this, drag);
             drag = null;
-        });
+            ghost.classList.add('disable-ghost');
+        }
+
     </script>
 
 </body>
